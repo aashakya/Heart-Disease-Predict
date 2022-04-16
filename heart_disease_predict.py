@@ -35,7 +35,10 @@ def ageClassify(value):
     elif value == "75-79": return 11   
     elif value == "80 or older": return 12
 
+# KNN function
 def KNNfunc(testcase):
+
+
     neigh = KNeighborsClassifier(n_neighbors = n)
     neigh.fit(X.values,Y)
     KNeighborsClassifier(...)
@@ -46,6 +49,7 @@ def KNNfunc(testcase):
         print('Might get an heartattack')
     prob = neigh.predict_proba([testcase])
     print("The probabily of heartattack is",round(prob[0,1],2))
+# adding function for Neural Network
 
 # Normalize BMI
 df['nBMI'] = normalize(df['BMI'])
@@ -79,7 +83,9 @@ df['nPA'] = df['PhysicalActivity'].apply(lambda x:0 if x == 'No' else 1)
 # # SkinCancer categorical to numerical
 # df['nSkinCancer'] = binaryYesNo(df['SkinCancer'])
 
+# Hyperparameter for KNN
 n = 10
+# Classifying output and input for the KNN
 Y = df['HeartDisease'].apply(lambda x:0 if x == 'No' else 1)
 X = df[['nBMI', 'nSmoke', 'nAlcohol', 'nPhysicalH', 'nMentalH', 'S', 'nA', 'nPA']]
 
