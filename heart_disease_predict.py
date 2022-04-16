@@ -10,6 +10,12 @@ import numpy as np
 
 df = pd.read_csv("heart_2020_cleaned.csv")
 
+def normalize(numbers):
+    minvalue = min(numbers)
+    maxvalue = max(numbers)
+    newValues = (numbers-minvalue)/(maxvalue-minvalue)
+    return newValues
+
 # Age category to numerical range 0-12
 # GenHealth categorical to numerical
 # Smoking categorical to numerical
