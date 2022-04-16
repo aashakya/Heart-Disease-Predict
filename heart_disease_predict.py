@@ -6,7 +6,7 @@ Created on Sat Apr 16 01:12:01 2022
 """
 
 import pandas as pd
-import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
 
 df = pd.read_csv("heart_2020_cleaned.csv")
 
@@ -35,29 +35,41 @@ def ageClassify(value):
     elif value == "75-79": return 11   
     elif value == "80 or older": return 12
 
+def KNNfunc(testcase):
+    neigh = KNeighborsClassifier(n_neighbors = n)
+    neigh.fit(X.values,Y)
+    KNeighborsClassifier(...)
+    pred_val = neigh.predict([testcase])
+    if (pred_val == 0):
+        print('Safe')
+    else:
+        print('Might get an heartattack')
+    prob = neigh.predict_proba([testcase])
+    print("The probabily of heartattack is",round(prob[0,1],2))
+
 # Normalize BMI
 df['nBMI'] = normalize(df['BMI'])
 # Smoking categorical to numerical
-df['nSmoke'] = binaryYesNo(df['Smoking'])
+df['nSmoke'] = df['Smoking'].apply(lambda x:0 if x == 'No' else 1)
 # AlcoholDrinking categorical to numerical
-df['nAlcohol'] = binaryYesNo(df['AlcoholDrinking'])
+df['nAlcohol'] = df['AlcoholDrinking'].apply(lambda x:0 if x == 'No' else 1)
 # Stroke categorical to numerical
 #df['nStroke'] = binaryYesNo(df['Stroke'])
 # Normalize Physical Health
-df['nPhysicalH'] = normalize(df['Physical Health'])
+df['nPhysicalH'] = normalize(df['PhysicalHealth'])
 # Normalize Mental Health
-df['nMentalH'] = normalize(df['Mental Health'])
+df['nMentalH'] = normalize(df['MentalHealth'])
 # DiffWalking categorical to numerical
 #df['nDiffWalk'] = binaryYesNo(df['DiffWalking'])
 # Sex categorical to numerical
 df['S'] = df['Sex'].apply(lambda x:0 if x == 'Male' else 1)
 # Age category to numerical range 0-12
-df['nA'] = ageClassify(df['AgeCategory'])
+df['nA'] = df.apply(lambda row: ageClassify(row['AgeCategory']), axis=1)
 # Race categorical to numerical
 # Diabetic categorical to numerical
 # df['nDiabetic'] = binaryYesNo(df['Diabetic'])
 # PhysicalActivity to numerical
-df['nPA'] = binaryYesNo(df['PhysicalActivity'])
+df['nPA'] = df['PhysicalActivity'].apply(lambda x:0 if x == 'No' else 1)
 # GenHealth categorical to numerical
 # Normalize SleepTime
 # Asthma categorical to numerical
@@ -67,3 +79,9 @@ df['nPA'] = binaryYesNo(df['PhysicalActivity'])
 # # SkinCancer categorical to numerical
 # df['nSkinCancer'] = binaryYesNo(df['SkinCancer'])
 
+n = 10
+Y = df['HeartDisease'].apply(lambda x:0 if x == 'No' else 1)
+X = df[['nBMI', 'nSmoke', 'nAlcohol', 'nPhysicalH', 'nMentalH', 'S', 'nA', 'nPA']]
+
+testcase = [0.185802, 1, 0, 0.2333, 0, 0, 8, 0]
+KNNfunc(testcase)
